@@ -44,6 +44,17 @@ int query(int ind,int tl,int tr,int l,int r){
     return min(query(2*ind+1,tl,mid,l,r),query(2*ind+2,mid+1,tr,l,r));
 }
 
+void pointUpdate(int ind,int tl,int tr,int node,int val){
+    if(tl==tr){
+        seg[ind]=val;
+        return;
+    }
+    int mid=(tl+tr)/2;
+    if(node<=mid && node>=tl) pointUpdate(2*ind+1,tl,mid,node,val);
+    else pointUpdate(2*ind+2,mid+1,tr,node,val);
+    seg[ind]=min(seg[2*ind+1],seg[2*ind+2]);
+}
+
 signed main()
 {
     ios_base::sync_with_stdio(false);
@@ -59,10 +70,16 @@ signed main()
     for(int i=0;i<n;i++) cin>>a[i];
     build(0,0,n-1);
     while(q--){
-        int l,r;
-        cin>>l>>r;
-        l--;
-        r--;
-        cout<<query(0,0,n-1,l,r)<<"\n";
+        int t,l,r;
+        cin>>t>>l>>r;
+        if(t==1){
+            l--;
+            pointUpdate(0,0,n-1,l,r);
+        }
+        else{
+            l--;
+            r--;
+            cout<<query(0,0,n-1,l,r)<<"\n";
+        }
     }
 }
